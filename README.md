@@ -11,6 +11,13 @@ Learning SwiftUI via Workout app &amp; Activity Rings.
 - fix shadow rotation
 - adds `stand up` bar chart
 
+## Demo
+
+| Screenshot | Movie |
+|------------|-------|
+|![screenshot](./docs/screenshot.png)|![movie](./docs/movie.gif)|
+
+
 ## Shoutouts
 
  - [@sarunw](https://twitter.com/) for activity rings
