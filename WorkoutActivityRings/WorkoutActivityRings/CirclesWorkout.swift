@@ -71,6 +71,7 @@ enum RingDiameter: CGFloat {
 enum ColorType: String {
     case base
     case light
+    case lightCircleEnd
     case outline
 }
 
@@ -204,42 +205,49 @@ struct ActivityRing: View {
     private let ringThickness: CGFloat = 40.0
 
     // TODO somehow Dict access doesn't work well in SwiftUI?!
-//    private var ringColor: [ColorType: Color] {
-//        get {
-//            switch ringDia {
-//            case .big: return [.base: Color.darkRed,
-//                               .light: Color.lightRed,
-//                               .outline: Color.outlineRed]
-//            case .medium: return [.base: Color.darkGreen,
-//                                  .light: Color.lightGreen,
-//                                  .outline: Color.outlineGreen]
-//            case .small: return [.base: Color.darkBlue,
-//                                 .light: Color.lightBlue,
-//                                 .outline: Color.outlineBlue]
-//            }
-//        }
-//    }
-
-    private var ringColor: [Color] {
+    private var ringColor: [ColorType: Color] {
         get {
             switch ringDia {
-            case .big: return [Color.darkRed,
-                               Color.lightRed,
-                               Color.lightRedCircleEnd,
-                               Color.outlineRed]
-            case .medium: return [Color.darkGreen,
-                                  Color.lightGreen,
-                                  Color.lightGreenCircleEnd,
-                                  Color.outlineGreen]
-            case .small: return [Color.darkBlue,
-                                 Color.lightBlue,
-                                 Color.lightBlueCircleEnd,
-                                 Color.outlineBlue]
-            default: return [Color.primary, Color.pink, Color.purple, Color.secondary]
-                
+            case .big: return [.base: Color.darkRed,
+                               .light: Color.lightRed,
+                               .lightCircleEnd: Color.lightRedCircleEnd,
+                               .outline: Color.outlineRed]
+            case .medium: return [.base: Color.darkGreen,
+                                  .light: Color.lightGreen,
+                                  .lightCircleEnd: Color.lightGreenCircleEnd,
+                                  .outline: Color.outlineGreen]
+            case .small: return [.base: Color.darkBlue,
+                                 .light: Color.lightBlue,
+                                 .lightCircleEnd: Color.lightBlueCircleEnd,
+                                 .outline: Color.outlineBlue]
+            default: return [.base: Color.primary,
+                             .light: Color.pink,
+                             .lightCircleEnd: Color.purple,
+                             .outline: Color.secondary]
             }
         }
     }
+
+//    private var ringColor: [Color] {
+//        get {
+//            switch ringDia {
+//            case .big: return [Color.darkRed,
+//                               Color.lightRed,
+//                               Color.lightRedCircleEnd,
+//                               Color.outlineRed]
+//            case .medium: return [Color.darkGreen,
+//                                  Color.lightGreen,
+//                                  Color.lightGreenCircleEnd,
+//                                  Color.outlineGreen]
+//            case .small: return [Color.darkBlue,
+//                                 Color.lightBlue,
+//                                 Color.lightBlueCircleEnd,
+//                                 Color.outlineBlue]
+//            default: return [Color.primary, Color.pink, Color.purple, Color.secondary]
+//
+//            }
+//        }
+//    }
 
     var body: some View {
         ZStack {
@@ -247,7 +255,7 @@ struct ActivityRing: View {
                 // background ring
                 Circle()
                     .scale(self.ringDia.rawValue)
-                    .stroke(self.ringColor[3], lineWidth: self.ringThickness)
+                    .stroke(self.ringColor[.outline], lineWidth: self.ringThickness)
 
                 // Activity Ring
                 Circle()
@@ -255,7 +263,7 @@ struct ActivityRing: View {
                     .trim(from: 0, to: self.progress)
                     .stroke(
                         AngularGradient(
-                            gradient: Gradient(colors: [self.ringColor[0], self.ringColor[1]]),
+                            gradient: Gradient(colors: [self.ringColor[.base], self.ringColor[.light]]),
                             center: .center,
                             startAngle: .degrees(0.0),
                             endAngle: .init(degrees: 360.0)
@@ -266,7 +274,7 @@ struct ActivityRing: View {
                 // fix overlapping gradient from full cycle
                 Circle()
                     .frame(width: self.ringThickness, height: self.ringThickness)
-                    .foregroundColor(self.ringColor[0])
+                    .foregroundColor(self.ringColor[.base])
                     .offset(y: self.fullCircleDotOffset)
 
             } else {
@@ -275,7 +283,7 @@ struct ActivityRing: View {
                     .scale(self.ringDia.rawValue)
                     .stroke(
                         AngularGradient(
-                            gradient: Gradient(colors: [self.ringColor[0], self.ringColor[1]]),
+                            gradient: Gradient(colors: [self.ringColor[.base], self.ringColor[.light]]),
                             center: .center,
                             startAngle: .degrees(0.0),
                             endAngle: .init(degrees: 360.0)
@@ -287,7 +295,7 @@ struct ActivityRing: View {
                 Circle()
                     .frame(width: self.ringThickness, height: self.ringThickness)
                     .offset(y: self.fullCircleDotOffset)
-                    .foregroundColor(self.ringColor[2]) // TODO insert linear Gradient
+                    .foregroundColor(self.ringColor[.lightCircleEnd]) // TODO insert linear Gradient
 //                    .overlay(Circle()
 //                        .offset(y: self.fullCircleDotOffset)
 //                        .fill(LinearGradient(gradient: Gradient(colors: [ringColor[2], ringColor[1]]),startPoint: .leading, endPoint: .trailing))
